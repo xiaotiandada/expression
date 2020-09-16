@@ -1,0 +1,25 @@
+.home {}
+
+
+.home-header {
+  width: 100%;
+  height: 60px;
+  background-color: rgb(36, 145, 218);
+}
+
+.home-body {
+  width: 100%;
+}
+
+.box {
+  width: 50%;
+  max-width: 200px;
+  height: 140px;
+  float: left;
+}
+
+.box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

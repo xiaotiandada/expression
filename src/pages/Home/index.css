@@ -8,18 +8,21 @@
 }
 
 .home-body {
-  width: 100%;
+  /* width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 4px;
+  row-gap: 10px; */
 }
 
 .box {
-  width: 50%;
-  max-width: 200px;
-  height: 140px;
-  float: left;
+  width: 100%;
 }
 
 .box img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+}
+
+.boxImg {
+  width: 100%;
 }

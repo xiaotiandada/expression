@@ -15,7 +15,9 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
+    "react-scrollmagic": "2.2.0",
     "react-waterfall-h5": "1.0.7",
+    "scrollmagic": "2.0.7",
     "typescript": "~3.7.2"
   },
   "scripts": {

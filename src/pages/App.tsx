@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "./App.css";
 import Home from "./Home";
+import Img from "./Img";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function Empty () {
@@ -19,11 +20,11 @@ class App extends React.Component {
             <Route path="/home">
               <Fragment>
                 <Header></Header>
-                <Home></Home>
+                <Img></Img>
                 <Footer></Footer>
               </Fragment>
             </Route>
-            <Route path="/" component={Empty}></Route>
+            <Route path="/" component={Home}></Route>
           </Switch>
         </div>
       </Router>

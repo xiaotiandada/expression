@@ -9,3 +9,7 @@ declare module 'scrollmagic' {
   import ScrollMagic from 'scrollmagic'
   export default ScrollMagic
 }
+
+declare module 'react-router-dom'
+
+declare module 'react-dom'

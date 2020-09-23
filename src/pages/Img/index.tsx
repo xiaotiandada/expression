@@ -83,12 +83,12 @@ export default class Home extends React.Component<any, any> {
         triggerHook: 0.98,
       })
       .setClassToggle(i, "show-box")
-      .addIndicators({
-        name: "width",
-        colorTrigger: "red",
-        colorStart: "#333",
-        colorEnd: "pink"
-      })
+      // .addIndicators({
+      //   name: "width",
+      //   colorTrigger: "red",
+      //   colorStart: "#333",
+      //   colorEnd: "pink"
+      // })
       .addTo(this.controller)
     })
 

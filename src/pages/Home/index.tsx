@@ -1,43 +1,56 @@
-import React, { Fragment } from 'react'
-import ScrollMagic from 'scrollmagic'
+import React, { Fragment, useEffect } from 'react'
+// import ScrollMagic from 'scrollmagic/scrollmagic/uncompressed/ScrollMagic'
 import gsap, { TimelineMax } from "gsap"
+import { ScrollTrigger } from 'gsap/all'
 
-import { ScrollMagicPluginGsap } from 'scrollmagic-plugin-gsap'
-
-// import 'scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap'
-// import 'scrollmagic/scrollmagic/uncompressed/plugins/debug.addIndicators'
+// import { ScrollMagicPluginGsap } from 'scrollmagic-plugin-gsap'
 import './index.scss'
 
-ScrollMagicPluginGsap(ScrollMagic, TimelineMax)
-gsap.registerPlugin(ScrollMagic)
+// import 'scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap'
 
 
+// import 'scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap'
+// require('scrollmagic/scrollmagic/uncompressed/plugins/debug.addIndicators')
+
+gsap.registerPlugin(ScrollTrigger)
 
 export default class Home extends React.Component<any, any> {
   scrollMagicController: any
   constructor(props: any) {
     super(props);
-    this.scrollMagicController = new ScrollMagic.Controller();
+    // this.scrollMagicController = new ScrollMagic.Controller();
   }
 
   componentDidMount() {
+    console.log('gsap', gsap)
 
-    let tl = new TimelineMax()
+    ScrollTrigger.defaults({
+      markers: true,
+      // restart pause resume none
+      toggleActions: "play pause resume reset",
+    })
 
-    console.log('1', TimelineMax, gsap)
+    gsap.utils.toArray('section').forEach((panel: any, i) => {
+      console.log('panel', panel, i)
+
+      let tl = gsap.timeline()
+      tl.from(panel.querySelector('.outer'), {
+        scaleX: 0,
+        duration: 0.25
+      })
+      .from(panel.querySelector('.inner'), {
+        yPercent: 100,
+        duration: 0.65,
+        ease: Back.easeInOut
+      })
+
+      ScrollTrigger.create({
+        animation: tl,
+        trigger: panel,
+        start: 'top center',
+      })
+    })
     
-    new ScrollMagic.Scene({
-      triggerElement: 'section',
-      triggerHook: '0.5'
-    })
-    // .setTween(tl)
-    .addIndicators({
-      colorTrigger: "white",
-      colorStart: "white",
-      colorEnd: "white",
-      indent: 40
-    })
-    .addTo(this.scrollMagicController)
   }
 
   render() {
@@ -45,12 +58,12 @@ export default class Home extends React.Component<any, any> {
       <Fragment>
         <section>
           <div className="outer">
-            <div className="inner">This is Section 1</div>
+            <div className="inner" id="id">This is Section 1</div>
           </div>
         </section>
-        <section>
-          <div className="outer">
-            <div className="inner">This is Section 2</div>
+        <section id="sss">
+          <div className="outer" id="outer">
+            <div className="inner" id="inner">This is Section 2</div>
           </div>
         </section>
         <section>

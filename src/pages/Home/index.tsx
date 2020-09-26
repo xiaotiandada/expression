@@ -1,90 +1,126 @@
-import React, { Fragment, useEffect } from 'react'
-// import ScrollMagic from 'scrollmagic/scrollmagic/uncompressed/ScrollMagic'
-import gsap, { TimelineMax } from "gsap"
-import { ScrollTrigger } from 'gsap/all'
+import React, { Fragment } from 'react'
+import ScrollMagic from 'scrollmagic'
 
-// import { ScrollMagicPluginGsap } from 'scrollmagic-plugin-gsap'
 import './index.scss'
 
-// import 'scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap'
+import list from '../../json.json'
 
+let data: any = list;
 
-// import 'scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap'
-// require('scrollmagic/scrollmagic/uncompressed/plugins/debug.addIndicators')
-
-gsap.registerPlugin(ScrollTrigger)
+class Items extends React.Component<any, any> {
+  render() {
+    const { data } = this.props
+    const listItems = data.map((i: any, idx: number) => {
+      return (
+        <section className="box-item"
+        key={idx.toString()} >
+        <div className="bi-img">
+          <img src={i.url} alt={i.title} />
+        </div>
+        <div className="bi-name">
+          {i.title}
+        </div>
+      </section>
+      )
+    })
+    return listItems
+  }
+}
 
 export default class Home extends React.Component<any, any> {
-  scrollMagicController: any
+  controller: any
+  state: any
   constructor(props: any) {
     super(props);
-    // this.scrollMagicController = new ScrollMagic.Controller();
+    this.controller = new ScrollMagic.Controller();
+    this.state = {
+      item: []
+    }
   }
 
   componentDidMount() {
-    console.log('gsap', gsap)
+    // let arr = []
+    // for (let i = 0; i < data.length; i++) {
+    //   const img = new Image()
+    //   let height = 200
+    //   img.src = data[i].url
+    //   img.onload = img.onerror = () => {
+    //     console.log('img', img.height)
+    //     height = img.height
+    //   }
+    //   arr.push({
+    //     ...data[i],
+    //     height: height
+    //   })
+    // }
 
-    ScrollTrigger.defaults({
-      markers: true,
-      // restart pause resume none
-      toggleActions: "play pause resume reset",
+    const getImageHeight = () => {
+      let list = []
+      let item: any = document.querySelectorAll('#waterfall .box-item')
+      for (let i = 0; i < item.length; i++) {
+        let height = item[i].querySelector('.bi-img img')
+        let heightText = item[i].querySelector('.bi-name')
+        item[i].style.height = `${height.offsetHeight + heightText.offsetHeight}px`
+        list.push(height.offsetHeight + heightText.offsetHeight)
+      }
+      this.state.item = list
+    }
+    const setWaterfall = () => {
+      let item: any = document.querySelectorAll('#waterfall .box-item')
+      let itemWidth = item[0].offsetWidth
+      let columns = 16
+      let arr: number[] = []
+
+      for (let i = 0; i < item.length; i++) {
+        // 前六
+        if (i < 6) {
+          item[i].style.top = 0
+          // width + cloumns * i
+          item[i].style.left = `${(itemWidth + columns) * i}px`
+          // push height
+          arr.push(item[i].offsetHeight)
+        } else {
+          let idx = 0 // default min index
+          let minH = arr[0] // default min height
+
+          // search min height height
+          for (let j = 0; j < arr.length; j++) {
+            if (minH > arr[j]) {
+              minH = arr[j]
+              idx = j
+            }
+          }
+
+          // min height + columns
+          item[i].style.top = `${arr[idx] + columns}px`
+          // min height dom's offsetLeft
+          item[i].style.left = `${item[idx].offsetLeft}px`
+          // set min height value
+          arr[idx] = arr[idx] + item[i].offsetHeight + columns
+        }
+      }
+
+      // set parent height, because container collapse
+      let waterfallHeight = item[item.length - 1].offsetTop + item[item.length - 1].offsetHeight
+      let waterfall: any = document.querySelector('#waterfall')
+      waterfall.style.height = `${waterfallHeight}px`
+    }
+
+    window.onload = async () => {
+      await getImageHeight()
+      await setWaterfall()
+    }
+    window.addEventListener('resize', async () => {
+      await getImageHeight()
+      await setWaterfall()
     })
-
-    gsap.utils.toArray('section').forEach((panel: any, i) => {
-      console.log('panel', panel, i)
-
-      let tl = gsap.timeline()
-      tl.from(panel.querySelector('.outer'), {
-        scaleX: 0,
-        duration: 0.25
-      })
-      .from(panel.querySelector('.inner'), {
-        yPercent: 100,
-        duration: 0.65,
-        ease: Back.easeInOut
-      })
-
-      ScrollTrigger.create({
-        animation: tl,
-        trigger: panel,
-        start: 'top center',
-      })
-    })
-    
   }
 
   render() {
     return (
       <Fragment>
-        <section>
-          <div className="outer">
-            <div className="inner" id="id">This is Section 1</div>
-          </div>
-        </section>
-        <section id="sss">
-          <div className="outer" id="outer">
-            <div className="inner" id="inner">This is Section 2</div>
-          </div>
-        </section>
-        <section>
-          <div className="outer">
-            <div className="inner">This is Section 3</div>
-          </div>
-        </section>
-        <section>
-          <div className="outer">
-            <div className="inner">This is Section 4</div>
-          </div>
-        </section>
-        <section>
-          <div className="outer">
-            <div className="inner">This is Section 5</div>
-          </div>
-        </section>
-        <section>
-          <div className="outer">
-            <div className="inner">This is Section 6</div>
-          </div>
+        <section className="home-body" id="waterfall">
+          <Items data={data}></Items>
         </section>
       </Fragment>
     )

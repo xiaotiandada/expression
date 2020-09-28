@@ -1,9 +1,18 @@
 .home-header {
   height: 50px;
-  background-color: rgb(36, 145, 218);
-  color: #fff;
+  background-color: #fff;
+  color: #333;
+  border-bottom: 1px solid #f1f1f1;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, .2);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   font-size: 20px;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+.hh-title {
+  font-size: 20px;
+  font-weight: bold;
 }

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import ScrollMagic from 'scrollmagic'
+import { Image } from 'antd';
 
 import './index.scss'
 
@@ -13,14 +14,14 @@ class Items extends React.Component<any, any> {
     const listItems = data.map((i: any, idx: number) => {
       return (
         <section className="box-item"
-        key={idx.toString()} >
-        <div className="bi-img">
-          <img src={i.url} alt={i.title} />
-        </div>
-        <div className="bi-name">
-          {i.title}
-        </div>
-      </section>
+          key={idx.toString()} >
+          <div className="bi-img">
+            <Image src={i.url} />
+          </div>
+          <div className="bi-name">
+            {i.title}
+          </div>
+        </section>
       )
     })
     return listItems

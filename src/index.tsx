@@ -7,9 +7,9 @@ import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
 
 ReactDOM.render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+  // <StrictMode>
+    <App />,
+  // </StrictMode>,
   document.getElementById('root')
 );
 

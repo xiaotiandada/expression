@@ -32,7 +32,30 @@ const initialState = {
 };
 
 const rootReducer = (state: any, action: any) => {
-  return state;
+  switch (action.type) {
+    case 'ADD_TODO': {
+      const { todos } = state;
+      return {
+        ...state,
+        todos: [
+          ...todos,
+          {
+            id: action.id,
+            text: action.text,
+            complete: false
+          }
+        ]
+      }
+    }
+    case 'SET_VISIBILITIFY_FILTER': {
+      return {
+        ...state,
+        filter: action.filter
+      }
+    }
+    default:
+      return state
+  }
 };
 
 const store = createStore(rootReducer, initialState);

@@ -32,6 +32,7 @@ const initialState = {
 };
 
 const rootReducer = (state: any, action: any) => {
+  console.log('rootReducer', action)
   switch (action.type) {
     case 'ADD_TODO': {
       const { todos } = state;
@@ -47,7 +48,14 @@ const rootReducer = (state: any, action: any) => {
         ]
       }
     }
-    case 'SET_VISIBILITIFY_FILTER': {
+    case 'TOGGLE_TODO': {
+      const { todos } = state
+      return {
+        ...state,
+        todos: todos.map((todo: { id: number, completed: boolean }) => todo.id === action.id ? { ...todo, completed: !todo.completed } : todo)
+      }
+    }
+    case 'SET_VISIBILITY_FILTER': {
       return {
         ...state,
         filter: action.filter

@@ -1,16 +1,14 @@
 import React from 'react'
-import Link from "./Link";
-import { VisibilityFilters } from "./index";
-import { setVisibilityFilter } from '../../state/actions';
-import { connect } from 'react-redux';
+import { VisibilityFilters } from "../../state/actions/index";
+import FilterLink from "../containers/FilterLink";
 
-const Footer = ({ filter, dispatch }) => (
+const Footer = () => (
     <section>
         <span>Show:</span>
-        <Link active={ VisibilityFilters.SHOW_ALL === filter } onClick={ () => dispatch(setVisibilityFilter(VisibilityFilters.SHOW_ALL)) }>All</Link>
-        <Link active={ VisibilityFilters.SHOW_ACTIVE === filter } onClick={ () => dispatch(setVisibilityFilter(VisibilityFilters.SHOW_ACTIVE)) }>Active</Link>
-        <Link active={ VisibilityFilters.SHOW_COMPLETED === filter } onClick={ () => dispatch(setVisibilityFilter(VisibilityFilters.SHOW_COMPLETED)) }>Completed</Link>
+        <FilterLink filter={ VisibilityFilters.SHOW_ALL }>All</FilterLink>
+        <FilterLink filter={ VisibilityFilters.SHOW_ACTIVE }>Active</FilterLink>
+        <FilterLink filter={ VisibilityFilters.SHOW_COMPLETED}>Completed</FilterLink>
     </section>
 )
 
-export default connect()(Footer)
+export default (Footer)

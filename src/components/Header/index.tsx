@@ -1,6 +1,9 @@
-import React, { Component } from 'react'
-import { Button, Modal, Form, Input, Select } from 'antd'
-import { FormInstance } from 'antd/lib/form';
+import React, { Fragment, useState } from 'react'
+import { Button, Modal, Form, Input, message, Avatar, Menu, Dropdown } from 'antd'
+import { setUsernameReducer, selectUsername, userLogOut } from "../../state/user/slice";
+import { useSelector, useDispatch } from "react-redux";
+import { setCookie } from "../../utils/cookie";
+import { UserOutlined, DownOutlined } from '@ant-design/icons';
 import './index.scss'
 
 const layout = {
@@ -11,72 +14,88 @@ const tailLayout = {
   wrapperCol: { offset: 4, span: 18},
 };
 
-export default class index extends Component {
-  formRef: any
-  state: any
-  constructor(props: any) {
-    super(props);
-    this.formRef = React.createRef<FormInstance>();
-    this.state = {
-      visible: false,
-      formData: {
-        username: 'admin',
-        password: 'admin'
-      }
-    };
-  }
+const Header = () => {
+  const selectUsernameState = useSelector(selectUsername)
+  const dispatch = useDispatch()
 
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
+  const [form] = Form.useForm();
+  const [visible, setVisible] = useState(false)
+  const [loginLoading, setLoginLoading] = useState(false)
+  const [username, setUsername] = useState('admin')
+  const [password, setPassword] = useState('admin')
 
-  handleOk = (e: any) => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-
-  handleCancel = (e: any) => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-
-  onFinish = (values: any) => {
+  const onFinish = (values: any) => {
     console.log(values);
-  };
+    console.log('username', username)
+    console.log('password', password)
 
-  render() {
-    return (
-      <header className="home-header">
-        <span className="hh-title">Header</span>
-        <Button type="primary" onClick={this.showModal}>登陆</Button>
-        <Modal
-          title="登陆"
-          visible={this.state.visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          footer={null}
-        >
-          <Form {...layout} ref={this.formRef} name="control-ref" onFinish={this.onFinish} initialValues={ this.state.formData }>
-            <Form.Item name="username" label="账号" rules={[{ required: true, message: 'Please input your username!' }]}>
-              <Input placeholder="admin" value={ this.state.formData.username } maxLength={ 10 } />
-            </Form.Item>
-            <Form.Item name="password" label="密码" rules={[{ required: true, message: 'Please input your password!' }]}>
-              <Input.Password placeholder="password(Any Value)" value={ this.state.formData.password } maxLength={ 10 } />
-            </Form.Item>
-            <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
-                登录
-              </Button>
-            </Form.Item>
-          </Form>
-        </Modal>
-      </header>
-    )
+    // Imiation login
+    setLoginLoading(true)
+    setTimeout(() => {
+      dispatch(setUsernameReducer(username))
+      // Imiation token, set to cookie
+      setCookie('access-token', `${username}.${password}.${Date.now()}`)
+      message.success('success login')
+      setLoginLoading(false)
+      setVisible(false)
+    }, 2000)
   }
+
+  const menuOnClick = async ({ key }: any) => {
+    console.log(`Click on item ${key}`);
+    if (key === 'logout') {
+      const res = await dispatch(userLogOut())
+      console.log('res', res)
+      message.success(res)
+    } else if (key === 'user') {
+      message.success('暂未开发...')
+    }
+  }
+
+  const menu = (
+    <Menu onClick={menuOnClick}>
+      <Menu.Item key="user">我的主页</Menu.Item>
+      <Menu.Item key="logout" danger>退出登陆</Menu.Item>
+    </Menu>
+  )
+
+  return (
+    <header className="home-header">
+      <span className="hh-title">Header</span>
+      {(
+        selectUsernameState ?
+        <Dropdown overlay={menu}>
+          <div>
+            <Avatar size={34} icon={<UserOutlined />} />
+              <span style={{ marginLeft: '6px', marginRight: '6px', fontSize: '14px', color: '#333' }}>{ selectUsernameState }</span>
+              <DownOutlined />
+          </div>
+        </Dropdown> :
+        <Button type="primary" onClick={() => setVisible(true)}>登陆</Button>
+      )}
+      <Modal
+        title="登陆"
+        visible={visible}
+        onOk={e => { console.log(e);setVisible(false)}}
+        onCancel={e => { console.log(e);setVisible(false)}}
+        footer={null}
+      >
+        <Form {...layout} form={form} name="control-ref" onFinish={onFinish}>
+          <Form.Item name="username" label="账号" rules={[{ required: true, message: 'Please input your username!' }]} initialValue={ username }>
+            <Input placeholder="admin" value={ username } onChange={ e => setUsername(e.target.value) } maxLength={ 10 } />
+          </Form.Item>
+          <Form.Item name="password" label="密码" rules={[{ required: true, message: 'Please input your password!' }]} initialValue={ password }>
+            <Input.Password placeholder="password(Any Value)" value={ password } onChange={ e => setPassword(e.target.value) } maxLength={ 10 } />
+          </Form.Item>
+          <Form.Item {...tailLayout}>
+            <Button type="primary" htmlType="submit" loading={loginLoading}>
+              登录
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </header>
+  )
 }
+
+export default Header

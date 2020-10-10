@@ -1,3 +1,15 @@
+## 图片展示
+
+> 没写完... (˶‾᷄ ⁻̫ ‾᷅˵)
+
+server: 获取 huaban 的图片 [huaban](https://huaban.com/)
+
+client: 展示列表图片
+- simple image list
+- simple image waterfall
+- simple login
+- simple redux (redux-toolkit)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
